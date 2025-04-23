@@ -29,4 +29,7 @@ app.use('/api/products', productRouter);
 const categoryRoutes = require('./routes/categoryRoute.js');
 app.use('/api/categories', categoryRoutes);
 
+const paymentRoutes = require('./routes/paymentRoute.js');
+app.use('/api/payments', paymentRoutes);
+
 module.exports = app;
