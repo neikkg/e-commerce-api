@@ -33,67 +33,51 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-// Get cart
+// Get orders
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    const user = await User.findById(req.userId, 'cart');
+    const user = await User.findById(req.userId, 'orders');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log("Returning cart:", user.cart || []);
-    res.json(user.cart || []);
+    res.json(user.orders || []);
   } catch (err) {
-    console.error('Get cart error:', err);
+    console.error('Get orders error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Add/update cart item
+// Add order
 router.post('/', authMiddleware, async (req, res) => {
   try {
-    const { productId, productName, img, price, discountPrice, amount } = req.body;
-    if (!productId || !productName || !img || !price || amount === undefined) {
-      return res.status(400).json({ message: 'Invalid cart item data' });
+    const { items, total } = req.body;
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ message: 'Invalid order data: Items missing or not an array' });
     }
-    const user = await User.findById(req.userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+    if (typeof total !== 'number' || isNaN(total)) {
+      return res.status(400).json({ message: 'Invalid order data: Total must be a number' });
     }
-    if (amount <= 0) {
-      user.cart = user.cart.filter(item => item.productId !== productId);
-    } else {
-      const existingItem = user.cart.find(item => item.productId === productId);
-      if (existingItem) {
-        existingItem.amount = amount;
-        existingItem.productName = productName;
-        existingItem.img = img;
-        existingItem.price = price;
-        existingItem.discountPrice = discountPrice;
-      } else {
-        user.cart.push({ productId, productName, img, price, discountPrice, amount });
+    for (const item of items) {
+      if (!item.productId || !item.productName || !item.img || typeof item.price !== 'number' || !item.amount) {
+        return res.status(400).json({ message: 'Invalid order item: Missing required fields' });
       }
     }
-    await user.save();
-    res.json(user.cart);
-  } catch (err) {
-    console.error('Add cart error:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Clear cart
-router.delete('/', authMiddleware, async (req, res) => {
-  try {
     const user = await User.findById(req.userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+    const order = {
+      items,
+      total,
+      timestamp: new Date()
+    };
+    user.orders.push(order);
     user.cart = [];
     await user.save();
-    res.json({ message: 'Cart cleared' });
+    res.json(order);
   } catch (err) {
-    console.error('Clear cart error:', err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Add order error:', err.message, err);
+    res.status(500).json({ message: 'Server error: ' + err.message });
   }
 });
 

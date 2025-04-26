@@ -38,6 +38,26 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'reviews'
     }],
+    cart: [{
+        productId: { type: String, required: true }, // Matches product ID in data.js
+        productName: { type: String, required: true },
+        img: { type: String, required: true },
+        price: { type: Number, required: true },
+        discountPrice: { type: Number },
+        amount: { type: Number, required: true, min: 1 }
+    }],
+    orders: [{
+        items: [{
+            productId: { type: String, required: true },
+            productName: { type: String, required: true },
+            img: { type: String, required: true },
+            price: { type: Number, required: true },
+            discountPrice: { type: Number },
+            amount: { type: Number, required: true, min: 1 }
+        }],
+        total: { type: Number, required: true },
+        timestamp: { type: Date, default: Date.now }
+    }],
     createdAt: {
         type: Date,
         default: Date.now()

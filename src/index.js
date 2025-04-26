@@ -1,5 +1,4 @@
 const express = require('express');
-
 const cors = require('cors');
 
 const app = express();
@@ -8,8 +7,8 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-    return res.status(200).send({message : "welcome to ecommerce api - node", status : true});
-})
+    return res.status(200).send({ message: "welcome to ecommerce api - node", status: true });
+});
 
 const authRouter = require('./routes/authRoute.js');
 app.use('/auth', authRouter);
@@ -23,7 +22,10 @@ app.use('/api/cart', cartRouter);
 const cartItemRouter = require('./routes/cartItemRoute.js');
 app.use('/api/cart-items', cartItemRouter);
 
-const productRouter = require('./routes/productRoute');
+const orderRouter = require('./routes/orderRoute.js');
+app.use('/api/orders', orderRouter);
+
+const productRouter = require('./routes/productRoute.js');
 app.use('/api/products', productRouter);
 
 const categoryRoutes = require('./routes/categoryRoute.js');
