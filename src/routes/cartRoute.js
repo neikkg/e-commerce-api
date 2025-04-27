@@ -118,7 +118,6 @@
 
 
 
-
 const express = require('express');
 const router = express.Router();
 const User = require('../models/userModel.js');
@@ -159,12 +158,13 @@ router.get('/', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId, 'cart');
     if (!user) {
+      console.log("User not found for ID:", req.userId);
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log("Returning cart for user:", req.userId, user.cart || []);
+    console.log(`[GET /api/cart] Fetching cart for user ${req.userId}:`, user.cart || []);
     res.json(user.cart || []);
   } catch (err) {
-    console.error('Get cart error:', err);
+    console.error('[GET /api/cart] Error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -174,14 +174,17 @@ router.post('/', authMiddleware, async (req, res) => {
   try {
     const { productId, productName, img, price, discountPrice, amount } = req.body;
     if (!productId || !productName || !img || !price || amount === undefined) {
+      console.log("Invalid cart item data:", req.body);
       return res.status(400).json({ message: 'Invalid cart item data' });
     }
     const user = await User.findById(req.userId);
     if (!user) {
+      console.log("User not found for ID:", req.userId);
       return res.status(404).json({ message: 'User not found' });
     }
     if (amount <= 0) {
       user.cart = user.cart.filter(item => item.productId !== productId);
+      console.log(`[POST /api/cart] Removed item ${productId} from cart for user ${req.userId}`);
     } else {
       const existingItem = user.cart.find(item => item.productId === productId);
       if (existingItem) {
@@ -190,15 +193,17 @@ router.post('/', authMiddleware, async (req, res) => {
         existingItem.img = img;
         existingItem.price = price;
         existingItem.discountPrice = discountPrice;
+        console.log(`[POST /api/cart] Updated item ${productId} in cart for user ${req.userId}`);
       } else {
         user.cart.push({ productId, productName, img, price, discountPrice, amount });
+        console.log(`[POST /api/cart] Added item ${productId} to cart for user ${req.userId}`);
       }
     }
     await user.save();
-    console.log("Updated cart for user:", req.userId, user.cart);
+    console.log(`[POST /api/cart] Cart updated for user ${req.userId}:`, user.cart);
     res.json(user.cart);
   } catch (err) {
-    console.error('Add cart error:', err);
+    console.error('[POST /api/cart] Error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -208,15 +213,16 @@ router.delete('/', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     if (!user) {
+      console.log("User not found for ID:", req.userId);
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log("Clear cart request received for user:", req.userId);
+    console.warn(`[DELETE /api/cart] Clear cart request received for user ${req.userId}. Current cart:`, user.cart);
     user.cart = [];
     await user.save();
-    console.log("Cart cleared for user:", req.userId);
+    console.log(`[DELETE /api/cart] Cart cleared for user ${req.userId}. New cart:`, user.cart);
     res.json({ message: 'Cart cleared' });
   } catch (err) {
-    console.error('Clear cart error:', err);
+    console.error('[DELETE /api/cart] Error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
