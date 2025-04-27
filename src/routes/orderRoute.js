@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/userModel');
+const User = require('../models/userModel.js');
 const jwt = require('jsonwebtoken');
 
 // Middleware to verify JWT

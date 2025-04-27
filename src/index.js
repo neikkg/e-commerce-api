@@ -19,17 +19,8 @@ app.use('/api/users', userRouter);
 const cartRouter = require('./routes/cartRoute.js');
 app.use('/api/cart', cartRouter);
 
-const cartItemRouter = require('./routes/cartItemRoute.js');
-app.use('/api/cart-items', cartItemRouter);
-
 const orderRouter = require('./routes/orderRoute.js');
 app.use('/api/orders', orderRouter);
-
-const productRouter = require('./routes/productRoute.js');
-app.use('/api/products', productRouter);
-
-const categoryRoutes = require('./routes/categoryRoute.js');
-app.use('/api/categories', categoryRoutes);
 
 const paymentRoutes = require('./routes/paymentRoute.js');
 app.use('/api/payments', paymentRoutes);
