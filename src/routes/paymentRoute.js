@@ -19,12 +19,12 @@ router.post('/create-order', async (req, res) => {
         const order = await razorpayInstance.orders.create(options);
 
         // Log the necessary details if the order is successful
-        console.log('Order created successfully:');
-        console.log(`Order ID: ${order.id}`);
-        console.log(`Amount: ${order.amount}`);
-        console.log(`Currency: ${order.currency}`);
-        console.log(`Receipt: ${order.receipt}`);
-        console.log(`Status: ${order.status}`);
+        // console.log('Order created successfully:');
+        // console.log(`Order ID: ${order.id}`);
+        // console.log(`Amount: ${order.amount}`);
+        // console.log(`Currency: ${order.currency}`);
+        // console.log(`Receipt: ${order.receipt}`);
+        // console.log(`Status: ${order.status}`);
 
         res.status(200).json(order);
     } catch (error) {
