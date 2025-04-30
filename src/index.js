@@ -22,7 +22,7 @@ app.use('/api/cart', cartRouter);
 const orderRouter = require('./routes/orderRoute.js');
 app.use('/api/orders', orderRouter);
 
-const paymentRoutes = require('./routes/paymentRoute.js');
-app.use('/api/payments', paymentRoutes);
+const paymentRouter = require('./routes/paymentRoute.js');
+app.use('/api/payments', paymentRouter);
 
 module.exports = app;
