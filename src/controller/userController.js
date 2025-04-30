@@ -1,7 +1,6 @@
 const userService = require('../services/userService.js');
 
 const getUserProfile = async (req, res) => {
-    // console.log("req ", jwt)
     try {
         const jwt = req.headers.authorization?.split(' ')[1];
 

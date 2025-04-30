@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
         ref: 'reviews'
     }],
     cart: [{
-        productId: { type: String, required: true }, // Matches product ID in data.js
+        productId: { type: String, required: true },
         productName: { type: String, required: true },
         img: { type: String, required: true },
         price: { type: Number, required: true },

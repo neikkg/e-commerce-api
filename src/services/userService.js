@@ -20,8 +20,6 @@ const createUser = async (userData) => {
       password,
     });
 
-    console.log("user created successfully", user);
-
     return user;
   } catch (error) {
     throw new Error(error.message);

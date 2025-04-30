@@ -1,4 +1,4 @@
-require('dotenv').config();  // Ensure dotenv is loaded
+require('dotenv').config();
 
 
 if (!process.env.JWT_SECRET) {
@@ -6,7 +6,7 @@ if (!process.env.JWT_SECRET) {
 }
 
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = process.env.JWT_SECRET;  // Using the JWT_SECRET from environment variables
+const SECRET_KEY = process.env.JWT_SECRET;
 
 const generateToken = (userId) => {
   const token = jwt.sign({ userId }, SECRET_KEY, { expiresIn: '1d' });
